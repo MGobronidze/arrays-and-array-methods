@@ -6,87 +6,89 @@ function addMovie(title, director, year, genre) {
   const movie = {
     title,
     director,
-    year,
+    year: Number(year),
     genre,
   };
   movies.push(movie);
-  console.log(`ფილმი "${title}" წარმატებით დაემატა.`);
+  renderMovies(movies);
 }
 
-// 2. ყველა ფილმის ჩვენება
-function showAllMovies() {
-  if (movies.length === 0) {
-    console.log("ბიბლიოთეკა ცარიელია.");
+// ფილმების სიის გამოჩენა
+function renderMovies(list) {
+  const movieList = document.getElementById("movieList");
+  movieList.innerHTML = "";
+
+  if (list.length === 0) {
+    movieList.innerHTML = "<p>ბიბლიოთეკა ცარიელია.</p>";
     return;
   }
-  console.log("ფილმების სია:");
-  movies.forEach((movie, index) => {
-    console.log(
-      `${index + 1}. ${movie.title} - ${movie.director} (${movie.year}) [${movie.genre}]`
-    );
+
+  list.forEach((movie, index) => {
+    const movieItem = document.createElement("div");
+    movieItem.className = "movie-item";
+    movieItem.innerHTML = `
+      ${index + 1}. <span>${movie.title}</span> - ${movie.director} (${movie.year}) [${movie.genre}]
+      <button onclick="deleteMovie('${movie.title}')">წაშლა</button>
+    `;
+    movieList.appendChild(movieItem);
   });
 }
 
-// 3. ფილმის ძიება სათაურით
-function findMovieByTitle(title) {
-  const found = movies.find((movie) => movie.title.toLowerCase() === title.toLowerCase());
-  if (found) {
-    console.log(`ნაპოვნია: ${found.title} - ${found.director} (${found.year}) [${found.genre}]`);
+// 2. ფილმის დამატების ღილაკზე დაჭერისას
+function handleAddMovie() {
+  const title = document.getElementById("title").value.trim();
+  const director = document.getElementById("director").value.trim();
+  const year = document.getElementById("year").value.trim();
+  const genre = document.getElementById("genre").value.trim();
+
+  if (title && director && year && genre) {
+    addMovie(title, director, year, genre);
+
+    // ვწმენდთ ველებს
+    document.getElementById("title").value = "";
+    document.getElementById("director").value = "";
+    document.getElementById("year").value = "";
+    document.getElementById("genre").value = "";
   } else {
-    console.log("ფილმი ვერ მოიძებნა.");
+    alert("გთხოვთ შეავსოთ ყველა ველი.");
+  }
+}
+
+// 3. ფილმის ძიება სათაურით
+function handleFindMovie() {
+  const searchTitle = document.getElementById("searchTitle").value.trim();
+  if (searchTitle) {
+    const found = movies.filter((movie) => movie.title.toLowerCase().includes(searchTitle.toLowerCase()));
+    renderMovies(found);
   }
 }
 
 // 4. ფილმების გაფილტვრა ჟანრის მიხედვით
-function filterByGenre(genre) {
-  const filtered = movies.filter((movie) => movie.genre.toLowerCase() === genre.toLowerCase());
-  if (filtered.length === 0) {
-    console.log("ასეთი ჟანრის ფილმები არ მოიძებნა.");
-  } else {
-    console.log(`ფილმები ჟანრით "${genre}":`);
-    filtered.forEach((movie) => console.log(`${movie.title} (${movie.year})`));
+function handleFilterByGenre() {
+  const genre = document.getElementById("filterGenre").value.trim();
+  if (genre) {
+    const filtered = movies.filter((movie) => movie.genre.toLowerCase() === genre.toLowerCase());
+    renderMovies(filtered);
   }
 }
 
-// 5. ფილმების დალაგება წლით (ზრდადობით)
+// 5. ფილმების დალაგება წლით
 function sortByYear() {
   const sorted = [...movies].sort((a, b) => a.year - b.year);
-  console.log("დალაგებული ფილმები წლით:");
-  sorted.forEach((movie) => console.log(`${movie.title} - ${movie.year}`));
+  renderMovies(sorted);
 }
 
-// 6. ფილმის წაშლა სათაურით
+// 6. ფილმის წაშლა
 function deleteMovie(title) {
-  const index = movies.findIndex((movie) => movie.title.toLowerCase() === title.toLowerCase());
+  const index = movies.findIndex((movie) => movie.title === title);
   if (index !== -1) {
     movies.splice(index, 1);
-    console.log(`ფილმი "${title}" წაიშალა.`);
-  } else {
-    console.log("ასეთი ფილმი ვერ მოიძებნა.");
+    renderMovies(movies);
   }
 }
 
-// სატესტო მონაცემების დამატება
+// საწყისი სატესტო მონაცემები
 addMovie("Inception", "Christopher Nolan", 2010, "Sci-Fi");
 addMovie("Interstellar", "Christopher Nolan", 2014, "Sci-Fi");
 addMovie("Parasite", "Bong Joon-ho", 2019, "Thriller");
 addMovie("The Godfather", "Francis Ford Coppola", 1972, "Crime");
-
-// ფუნქციების დემონსტრაცია
-console.log("\n--- ყველა ფილმი ---");
-showAllMovies();
-
-console.log("\n--- ძიება: Interstellar ---");
-findMovieByTitle("Interstellar");
-
-console.log("\n--- ფილმები ჟანრით: Sci-Fi ---");
-filterByGenre("Sci-Fi");
-
-console.log("\n--- ფილმების დალაგება წლით ---");
-sortByYear();
-
-console.log("\n--- წაშლა: Parasite ---");
-deleteMovie("Parasite");
-
-console.log("\n--- განახლებული სია ---");
-showAllMovies();

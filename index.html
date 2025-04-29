@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ფილმების ბიბლიოთეკა</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>ფილმების ბიბლიოთეკა</h1>
+
+    <div class="form">
+      <input type="text" id="title" placeholder="ფილმის სახელი">
+      <input type="text" id="director" placeholder="რეჟისორი">
+      <input type="number" id="year" placeholder="წელი">
+      <input type="text" id="genre" placeholder="ჟანრი">
+      <button onclick="handleAddMovie()">დამატება</button>
+    </div>
+
+    <div class="search">
+      <input type="text" id="searchTitle" placeholder="ძიება სათაურით">
+      <button onclick="handleFindMovie()">ძიება</button>
+    </div>
+
+    <div class="filter">
+      <input type="text" id="filterGenre" placeholder="გაფილტრე ჟანრით">
+      <button onclick="handleFilterByGenre()">გაფილტვრა</button>
+    </div>
+
+    <div class="sort">
+      <button onclick="sortByYear()">დალაგება წლით</button>
+    </div>
+
+    <div id="movieList" class="movie-list"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
